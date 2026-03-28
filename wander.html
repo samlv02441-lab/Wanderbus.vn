@@ -3,7 +3,7 @@ import {
   Menu, X, Search, Calendar, Users, MapPin, 
   Truck, Star, Shield, Heart, DollarSign, PawPrint,
   CheckCircle, ChevronRight, Tent, Map,
-  Sparkles, Loader2, Send, Bot
+  Sparkles, Loader2, Send, Bot, Globe
 } from 'lucide-react';
 
 const generateWithGemini = async (prompt) => {
@@ -42,6 +42,10 @@ const generateWithGemini = async (prompt) => {
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  // Language State
+  const [langOpen, setLangOpen] = useState(false);
+  const [currentLang, setCurrentLang] = useState('EN');
   
   // AI Feature State
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
@@ -145,12 +149,9 @@ export default function App() {
           <div className="flex justify-between items-center">
             {/* Logo */}
             <div className="flex items-center gap-3 cursor-pointer">
-              <div className="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center shadow-sm">
-                <Tent className="w-6 h-6 text-white" />
-              </div>
+              <img src="image_482610.jpg" alt="Wanderbus Logo" className="h-12 md:h-14 w-auto object-contain mix-blend-multiply" />
               <div className="flex flex-col justify-center">
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl font-black tracking-tight text-slate-900 leading-none mb-1">Wanderbus</span>
                   <button 
                     onClick={() => setIsAiModalOpen(true)}
                     className="flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-100 hover:bg-emerald-200 px-2 py-0.5 rounded-full transition-colors mb-1"
@@ -160,7 +161,7 @@ export default function App() {
                 </div>
                 <div className="flex items-center gap-1">
                   <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Partnered with</span>
-                  <img src="image_3c3e3b.png" alt="Vinfast Logo" className="h-4 object-contain" />
+                  <span className="text-[13px] font-black text-slate-900 tracking-tight ml-0.5">VINFAST</span>
                 </div>
               </div>
             </div>
@@ -174,22 +175,54 @@ export default function App() {
               <a href="#" className="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition-colors">Destinations</a>
             </div>
 
-            {/* Desktop Actions */}
-            <div className="hidden lg:flex items-center space-x-4">
-              <a href="#" className="text-sm font-bold text-slate-600 hover:text-emerald-600 transition-colors">Sign In</a>
-              <button className="px-5 py-2.5 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-all duration-300 shadow-sm hover:shadow-md">
-                List Your RV
-              </button>
-            </div>
+            {/* Right Side Actions & Mobile Menu */}
+            <div className="flex items-center gap-1 sm:gap-2">
+              
+              {/* Language Selector */}
+              <div className="relative">
+                <button 
+                  onClick={() => setLangOpen(!langOpen)}
+                  className="flex items-center gap-1.5 text-slate-600 hover:text-emerald-600 focus:outline-none p-2 rounded-lg transition-colors"
+                >
+                  <Globe className="w-5 h-5" />
+                  <span className="text-sm font-bold hidden sm:block">{currentLang}</span>
+                </button>
+                
+                {langOpen && (
+                  <div className="absolute right-0 mt-2 w-36 bg-white rounded-xl shadow-xl border border-slate-100 py-2 z-[100] animate-in fade-in slide-in-from-top-2">
+                    <button 
+                      onClick={() => { setCurrentLang('EN'); setLangOpen(false); }}
+                      className={`w-full text-left px-4 py-2 text-sm font-bold transition-colors ${currentLang === 'EN' ? 'text-emerald-600 bg-emerald-50' : 'text-slate-600 hover:bg-slate-50'}`}
+                    >
+                      English (EN)
+                    </button>
+                    <button 
+                      onClick={() => { setCurrentLang('VN'); setLangOpen(false); }}
+                      className={`w-full text-left px-4 py-2 text-sm font-bold transition-colors ${currentLang === 'VN' ? 'text-emerald-600 bg-emerald-50' : 'text-slate-600 hover:bg-slate-50'}`}
+                    >
+                      Tiếng Việt (VN)
+                    </button>
+                  </div>
+                )}
+              </div>
 
-            {/* Mobile Menu Button */}
-            <div className="lg:hidden">
-              <button 
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-slate-600 hover:text-slate-900 focus:outline-none p-2"
-              >
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
+              {/* Desktop Actions */}
+              <div className="hidden lg:flex items-center space-x-4 ml-2">
+                <a href="#" className="text-sm font-bold text-slate-600 hover:text-emerald-600 transition-colors">Sign In</a>
+                <button className="px-5 py-2.5 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-all duration-300 shadow-sm hover:shadow-md">
+                  List Your RV
+                </button>
+              </div>
+
+              {/* Mobile Menu Button */}
+              <div className="lg:hidden flex items-center">
+                <button 
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="text-slate-600 hover:text-slate-900 focus:outline-none p-2"
+                >
+                  {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -216,20 +249,22 @@ export default function App() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <img 
-            src="https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?auto=format&fit=crop&q=80&w=2070" 
+            src="image_472e0d.jpg" 
             alt="Campervan in nature" 
             className="w-full h-full object-cover"
+            onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?auto=format&fit=crop&q=80&w=2000' }}
           />
           {/* Dark Overlay for readability */}
-          <div className="absolute inset-0 bg-slate-900/60 mix-blend-multiply"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+          <div className="absolute inset-0 bg-slate-900/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent"></div>
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight drop-shadow-lg">
-              Compare RV rentals <br className="hidden md:block" />
-              from top sites
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight drop-shadow-lg font-serif">
+              Your Family's Next <br />
+              <span className="text-orange-500">Vietnam Adventure</span> <br />
+              Starts Here
             </h1>
             <p className="text-lg md:text-xl text-slate-200 mb-8 max-w-2xl mx-auto drop-shadow-md">
               Find the best travel trailers, motorhomes and campervans across the most popular RV rental sites.
@@ -441,11 +476,8 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
             <div className="col-span-2 lg:col-span-2">
-              <div className="flex items-center gap-2 mb-6 cursor-pointer">
-                <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
-                  <Tent className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-2xl font-black text-white">Wanderbus</span>
+              <div className="mb-6 cursor-pointer inline-block bg-white px-3 py-2 rounded-xl shadow-sm">
+                <img src="image_482610.jpg" alt="Wanderbus Logo" className="h-8 md:h-10 w-auto object-contain" />
               </div>
               <p className="text-slate-400 mb-6 max-w-sm leading-relaxed">
                 Wanderbus brings together the best RV rental deals from top sites so you can book with confidence, all in one place.
